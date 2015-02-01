@@ -1,0 +1,9 @@
+angular.module('manufacturers', ['ngRoute', 'manufacturers.controllers'])
+	.config(function($locationProvider, $routeProvider){		
+		$locationProvider.html5Mode(true);	
+		$routeProvider
+			.when('/manufacturers', {
+				templateUrl: "<%= asset_path('manufacturers/list.html') %>",
+				controller: 'ListController'
+			});
+	});

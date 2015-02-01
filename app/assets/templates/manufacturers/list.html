@@ -1,0 +1,17 @@
+<div class="page-header">
+	<h1>Manufacturers</h1>
+</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="manufacturer in manufacturers">
+			<td>
+				<a ng-href="/manufacturers/{{manufacturer.id}}">{{manufacturer.name}}</a>
+			</td>
+		</tr>
+	</tbody>
+</table>

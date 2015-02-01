@@ -65,5 +65,7 @@ Rails.application.routes.draw do
   end
 
   angular_app :categories  
+  angular_app :manufacturers
+  angular_app :styles
 
 end

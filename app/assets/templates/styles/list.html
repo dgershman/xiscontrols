@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h1>Categories</h1>
+	<h1>Styles</h1>
 </div>
 <table class="table">
 	<thead>
@@ -7,10 +7,10 @@
 			<th>Name</th>
 		</tr>
 	</thead>
-	<tbody>		
-		<tr ng-repeat="category in categories">
+	<tbody>
+		<tr ng-repeat="style in styles">
 			<td>
-				<a ng-href="/categories/{{category.id}}">{{category.name}}</a>
+				<a ng-href="/style/{{style.id}}">{{style.name}}</a>
 			</td>
 		</tr>
 	</tbody>
