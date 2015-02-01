@@ -53,4 +53,17 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
+  def angular_app(app_name)
+    scope app_name do
+      get '/', to: "#{app_name}#index"
+      get '/*ng_route', to: "#{app_name}#index"      
+    end
+    scope '/api', module: 'api' do
+      resources app_name
+    end
+  end
+
+  angular_app :categories  
+
 end
