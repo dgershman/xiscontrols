@@ -48,6 +48,7 @@ Manufacturer.create(name: "Automatic Systems")
 # Styles
 #
 
+Style.create(name: "Waist High")
 Style.create(name: "Full Height")
 Style.create(name: "Gate")
 Style.create(name: "Optical")

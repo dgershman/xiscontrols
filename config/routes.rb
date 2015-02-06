@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -64,8 +66,10 @@ Rails.application.routes.draw do
     end
   end
 
+  root to: "home#index"
+
   angular_app :categories  
   angular_app :manufacturers
-  angular_app :styles
+  angular_app :styles  
 
 end

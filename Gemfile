@@ -25,6 +25,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'angularjs-rails', '~> 1.3.10'
 gem 'angularjs-rails-resource', '~> 1.2.1'
 
+gem 'activeadmin', github: 'activeadmin'
+gem 'devise'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
