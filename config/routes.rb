@@ -66,10 +66,8 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "home#index"
+  root to: "products#index"
 
-  angular_app :categories  
-  angular_app :manufacturers
-  angular_app :styles  
+  angular_app :products
 
 end

@@ -1,0 +1,9 @@
+angular.module('products', ['ngRoute', 'products.controllers'])
+	.config(function($locationProvider, $routeProvider){		
+		$locationProvider.html5Mode(true);	
+		$routeProvider
+			.when('/', {
+				templateUrl: "<%= asset_path('products/list.html') %>",
+				controller: 'ListController'
+			});
+	});

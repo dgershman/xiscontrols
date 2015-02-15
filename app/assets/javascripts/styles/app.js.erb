@@ -1,9 +1,0 @@
-angular.module('styles', ['ngRoute', 'styles.controllers'])
-	.config(function($locationProvider, $routeProvider){		
-		$locationProvider.html5Mode(true);	
-		$routeProvider
-			.when('/styles', {
-				templateUrl: "<%= asset_path('styles/list.html') %>",
-				controller: 'ListController'
-			});
-	});

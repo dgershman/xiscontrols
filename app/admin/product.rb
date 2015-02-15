@@ -4,7 +4,7 @@ ActiveAdmin.register Product do
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   permit_params :description, category_ids: [], manufacturer_ids: [], style_ids: [], 
-    product_variants_attributes: [:id, :product_id, :sku, :description, :price, :_destroy]
+    variants_attributes: [:id, :product_id, :sku, :description, :price, :_destroy]
   #
   # or
   #
@@ -16,6 +16,7 @@ ActiveAdmin.register Product do
 
   show do
     attributes_table do
+      row :name
       row :description      
     end
     panel 'Categories' do
@@ -34,10 +35,11 @@ ActiveAdmin.register Product do
       end
     end
     panel 'Variants' do
-      table_for product.product_variants do
+      table_for product.variants do
         column :sku
-        column :description
+        column :description        
         column :price
+        column :weight
       end    
     end    
   end
@@ -49,16 +51,18 @@ ActiveAdmin.register Product do
   form do |f|
     f.semantic_errors    
     f.inputs do
+      f.input :name
       f.input :description
       f.input :categories, as: :check_boxes, collection: Category.all.order(:name)
       f.input :manufacturers, as: :check_boxes, collection: Manufacturer.all.order(:name)
       f.input :styles, as: :check_boxes, collection: Style.all.order(:name)      
     end
     f.inputs do
-      f.has_many :product_variants, heading: 'Variants', allow_destroy: true, new_record: true do |v|
+      f.has_many :variants, heading: 'Variants', allow_destroy: true, new_record: true do |v|        
         v.input :sku, as: :string
-        v.input :description, as: :text
+        v.input :description, as: :text        
         v.input :price, as: :number
+        v.input :weight, as: :number
       end
     end
     f.actions

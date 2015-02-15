@@ -33,16 +33,20 @@ Category.create(name: "Upgrade Kits")
 # Manufacturers
 #
 
-Manufacturer.create(name: "Robot")
-Manufacturer.create(name: "Burle")
-Manufacturer.create(name: "Philips")
+Manufacturer.create(name: "Robot Industries")
+Manufacturer.create(name: "Burle Industries")
+Manufacturer.create(name: "Horton")
+Manufacturer.create(name: "Philips CSS")
+Manufacturer.create(name: "Dearborn Access Control")
 Manufacturer.create(name: "Tomsed")
+Manufacturer.create(name: "Hard Logic")
 Manufacturer.create(name: "Boon Edam")
 Manufacturer.create(name: "Alvarado")
 Manufacturer.create(name: "Controlled Access")
 Manufacturer.create(name: "Ingress Controls")
 Manufacturer.create(name: "Perey")
 Manufacturer.create(name: "Automatic Systems")
+Manufacturer.create(name: "Cubic")
 
 #
 # Styles
@@ -52,3 +56,4 @@ Style.create(name: "Waist High")
 Style.create(name: "Full Height")
 Style.create(name: "Gate")
 Style.create(name: "Optical")
+

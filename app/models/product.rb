@@ -3,12 +3,12 @@ class Product < ActiveRecord::Base
   has_and_belongs_to_many :manufacturers
   has_and_belongs_to_many :styles
 
-  has_many :product_variants, dependent: :delete_all
-  has_many :product_images
-  has_many :product_documents
+  has_many :variants, dependent: :delete_all
+  has_many :images
+  has_many :documents
 
   accepts_nested_attributes_for :categories
   accepts_nested_attributes_for :manufacturers
   accepts_nested_attributes_for :styles
-  accepts_nested_attributes_for :product_variants
+  accepts_nested_attributes_for :variants
 end

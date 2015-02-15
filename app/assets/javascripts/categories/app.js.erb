@@ -1,9 +1,0 @@
-angular.module('categories', ['ngRoute', 'categories.controllers'])
-	.config(function($locationProvider, $routeProvider){		
-		$locationProvider.html5Mode(true);	
-		$routeProvider
-			.when('/categories', {
-				templateUrl: "<%= asset_path('categories/list.html') %>",
-				controller: 'ListController'
-			});
-	});

@@ -1,0 +1,1 @@
+json.partial! partial: 'product', collection: @products, as: :product
