@@ -1,0 +1,478 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import { getParts, categories, brands, brandUrl, categoryUrl } from '../lib/catalog';
+
+const parts = await getParts();
+const tiles = categories
+  .map((c) => {
+    const inCat = parts.filter((p) => p.data.category === c.slug);
+    const pick = inCat.find((p) => p.data.best_choice && p.data.images.length) ?? inCat.find((p) => p.data.images.length);
+    return { ...c, count: inCat.length, img: pick?.data.images[0] };
+  })
+  .filter((c) => c.count > 0);
+const brandCounts = brands
+  .map((b) => ({ ...b, count: parts.filter((p) => p.data.brands.includes(b.name)).length }))
+  .filter((b) => b.count > 0);
+const examples = ['85-225', 'THT-100 pawl spring', 'Perey bearing', 'TCB 6.4', 'Alvarado solenoid', 'dog'];
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__copy">
+        <h1>Don't replace the turnstile. Replace the part.</h1>
+        <p class="hero__lede">
+          Replacement parts and controllers for turnstiles and revolving gates, from the engineers who designed many of
+          the originals. Real prices, no sign-in, and someone who actually knows how the stuff works on the other end of
+          the phone.
+        </p>
+        <form action="/search/" method="get" class="hero__search" role="search">
+          <label for="hq" class="visually-hidden">Search parts</label>
+          <input id="hq" name="q" type="search" placeholder="Try a part number, a brand, or what the part does" />
+          <button class="btn" type="submit">Find the part</button>
+        </form>
+        <p class="hero__try">
+          People search for things like
+          {examples.map((e) => <a href={`/search/?q=${encodeURIComponent(e)}`}>{e}</a>)}
+        </p>
+      </div>
+
+      <figure class="label-art" aria-label="Example of an XIS Controls part label">
+        <div class="label-art__sticker">
+          <p class="label-art__brand">XIS CONTROLS</p>
+          <dl>
+            <div><dt>P/N</dt><dd>101-008</dd></div>
+            <div><dt>Fits</dt><dd>Tomsed / Boon Edam FH</dd></div>
+            <div><dt>S/N</dt><dd>0417-2261</dd></div>
+          </dl>
+          <p class="label-art__phone">{site.phone}</p>
+        </div>
+        <figcaption>
+          Found this label on a part? You found us. Every part we ship carries our number, so whoever works on it next
+          knows exactly what it is and who to call.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--bench">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Shop by part</h2>
+        <a href="/parts/">See all {parts.length} parts</a>
+      </div>
+      <ul class="tiles">
+        {
+          tiles.map((t) => (
+            <li>
+              <a href={categoryUrl(t.slug)} class="tile">
+                <span class="tile__img">{t.img && <img src={t.img} alt="" loading="lazy" />}</span>
+                <span class="tile__name">{t.short}</span>
+                <span class="tile__count">{t.count} parts</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap brands">
+      <div>
+        <h2>Shop by the name on the turnstile</h2>
+        <p class="lede">
+          Robot became Burle, Burle became Philips, Philips sold to Tomsed, Tomsed became Boon Edam. Same mechanisms,
+          different stickers. Start with whatever name is on yours.
+        </p>
+        <p><a href="/media/turnstile-bedfellows.pdf">Read the Strange Bedfellows history</a></p>
+      </div>
+      <ul class="brands__list">
+        {
+          brandCounts.map((b) => (
+            <li>
+              <a class="chip" href={brandUrl(b.name)}>
+                {b.name} <small>{b.count}</small>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section helpband">
+    <div class="wrap helpband__in">
+      <div>
+        <h2>Not sure what you've got?</h2>
+        <p class="lede">
+          Your boss said "get it fixed or throw it out" and nobody left a manual. Send us photos and we'll tell you what
+          it is and what it needs. Photos tell us who made it, and that's most of the problem.
+        </p>
+        <p class="helpband__cta">
+          <a class="btn" href="/identify/">Send us photos</a>
+          <a class="btn btn--ghost" href={site.phoneHref}>Call {site.phone}</a>
+        </p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Step back</h3>
+          <p>Take one wide shot of the whole turnstile, so we can see the model.</p>
+        </li>
+        <li>
+          <h3>Find the sticker</h3>
+          <p>A close-up of any label, model number or serial plate.</p>
+        </li>
+        <li>
+          <h3>Get close</h3>
+          <p>A close-up of the part that's broken or missing, plus a hand or coin for scale.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap why">
+      <div class="why__text">
+        <h2>Shiny isn't always better</h2>
+        <p>
+          A full height turnstile costs $18,000 to $40,000 to replace. Most of the time the one you have needs a $150
+          part and an afternoon. We have equipment in the field that's 50 years old and works like the day it was new.
+        </p>
+        <p>
+          When something isn't made anymore, we put it back into production, reverse engineer it, or redesign the board.
+          Our TCB replacement boards have been installed in roughly 1,700 turnstiles. And when it really is time to
+          replace the machine, we'll tell you that too.
+        </p>
+        <p><a href="/repairs/">What we repair and re-manufacture</a></p>
+      </div>
+      <figure class="gator">
+        <img src="/media/philips-burle-parts/alligator.gif" alt="A cartoon alligator waiting in the water" loading="lazy" />
+        <figcaption>
+          <strong>Our competitors are waiting for your call.</strong> Some sites show pictures of parts they don't have,
+          then tell you it's obsolete and sell you a whole new turnstile. Don't get steered into the alligator's mouth.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    background: var(--white);
+    padding: clamp(32px, 6vw, 72px) 0 clamp(40px, 6vw, 80px);
+  }
+  .hero__in {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: var(--t-3xl);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+    margin-bottom: 18px;
+  }
+  .hero__lede {
+    font-size: var(--t-lg);
+    max-width: 52ch;
+    color: var(--text);
+  }
+  .hero__search {
+    display: flex;
+    gap: 0;
+    max-width: 640px;
+    margin-top: 24px;
+  }
+  .hero__search input {
+    border: 2px solid var(--black);
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    font-size: 1.15rem;
+    min-height: 56px;
+  }
+  .hero__search .btn {
+    border-radius: 0 6px 6px 0;
+    min-height: 56px;
+    white-space: nowrap;
+  }
+  .hero__try {
+    margin-top: 12px;
+    font-size: var(--t-sm);
+    color: var(--steel);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: baseline;
+  }
+  .hero__try a {
+    color: var(--black);
+    background: var(--bench);
+    padding: 2px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .hero__try a:hover {
+    background: var(--yellow);
+  }
+
+  .label-art {
+    margin: 0;
+  }
+  .label-art__sticker {
+    background: var(--yellow);
+    border: 3px solid var(--black);
+    border-radius: 10px;
+    padding: 22px 26px 18px;
+    box-shadow: 10px 10px 0 var(--black);
+    transform: rotate(-2.5deg);
+    max-width: 420px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .label-art__sticker::before {
+    content: '';
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid var(--black);
+    background: var(--white);
+  }
+  .label-art__brand {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 2.3rem;
+    line-height: 1;
+    margin: 0 0 14px;
+    color: var(--black);
+  }
+  .label-art dl {
+    margin: 0;
+    border-top: 2px solid var(--black);
+  }
+  .label-art dl div {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    border-bottom: 2px solid var(--black);
+    padding: 6px 0;
+  }
+  .label-art dt {
+    font-weight: 700;
+    font-size: var(--t-sm);
+  }
+  .label-art dd {
+    margin: 0;
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    color: var(--black);
+  }
+  .label-art__phone {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 2.6rem;
+    line-height: 1;
+    margin: 14px 0 0;
+    color: var(--black);
+  }
+  .label-art figcaption {
+    margin: 30px auto 0;
+    max-width: 420px;
+    font-size: var(--t-sm);
+    color: var(--steel);
+  }
+
+  .tiles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .tile {
+    display: grid;
+    grid-template-rows: 120px auto auto;
+    background: var(--white);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    padding: 12px;
+    text-decoration: none;
+    color: var(--black);
+    height: 100%;
+  }
+  .tile:hover {
+    border-color: var(--black);
+  }
+  .tile__img {
+    background: var(--photo);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .tile__img img {
+    max-height: 112px;
+    width: auto;
+    object-fit: contain;
+  }
+  .tile__name {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-top: 8px;
+    line-height: 1.1;
+  }
+  .tile__count {
+    font-size: var(--t-xs);
+    color: var(--steel);
+  }
+
+  .brands {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .brands h2 {
+    font-size: var(--t-2xl);
+  }
+  .brands__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .helpband {
+    background: var(--yellow);
+  }
+  .helpband__in {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .helpband h2 {
+    font-size: var(--t-2xl);
+  }
+  .helpband .lede {
+    color: var(--black);
+  }
+  .helpband__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+  .steps li {
+    counter-increment: step;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 4px;
+    padding: 14px 16px 12px 64px;
+    position: relative;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--black);
+    color: var(--yellow);
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 1.3rem;
+    display: grid;
+    place-items: center;
+  }
+  .steps h3 {
+    margin: 0 0 2px;
+    font-size: 1.3rem;
+  }
+  .steps p {
+    margin: 0;
+  }
+
+  .why {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .why h2 {
+    font-size: var(--t-2xl);
+  }
+  .why__text {
+    max-width: 62ch;
+  }
+  .gator {
+    margin: 0;
+    background: var(--bench);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .gator img {
+    width: 100%;
+    border-radius: 2px;
+  }
+  .gator figcaption {
+    margin-top: 12px;
+    font-size: var(--t-sm);
+  }
+
+  @media (max-width: 900px) {
+    .hero__in,
+    .brands,
+    .helpband__in,
+    .why {
+      grid-template-columns: 1fr;
+    }
+    .label-art__sticker {
+      transform: rotate(-1.5deg);
+      max-width: 360px;
+    }
+  }
+  @media (max-width: 520px) {
+    .hero__search {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .hero__search input {
+      border-right: 2px solid var(--black);
+      border-radius: 6px;
+    }
+    .hero__search .btn {
+      border-radius: 6px;
+    }
+    .tiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tile {
+      grid-template-rows: 90px auto auto;
+    }
+    .tile__img img {
+      max-height: 84px;
+    }
+  }
+</style>

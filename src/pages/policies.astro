@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Ordering, payment and shipping">
+  <div class="wrap prose" style="padding-bottom:72px">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Ordering, payment and shipping</nav>
+    <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800">Ordering, payment and shipping</h1>
+    <h2>Ordering</h2>
+    <p>
+      Prices on this site are current and in US dollars. Add parts to an order request, or email or call us with part numbers.
+      We confirm every order, then send an invoice that includes the exact shipping cost. All orders are prepaid before we
+      ship.
+    </p>
+    <h2>Payment</h2>
+    <ul>
+      <li>Credit cards and PayPal invoicing.</li>
+      <li>Orders placed from outside the US or Canada carry a 3% foreign transaction fee on goods plus shipping.</li>
+      <li>Orders from outside North America can pay by wire transfer: 3% foreign transaction fee plus a $30 wire fee.</li>
+      <li>American Express transactions carry an additional 1% on merchandise plus shipping.</li>
+    </ul>
+    <h2>Shipping</h2>
+    <ul>
+      <li>Residential addresses and small businesses: trackable USPS Priority Mail.</li>
+      <li>Large, complex, government or military facilities, or large or valuable orders: FedEx Ground unless you ask otherwise. Express is available.</li>
+      <li>We can ship on your company's or a third party's FedEx account.</li>
+      <li>Insurance is optional within the US and Canada; you assume responsibility for loss or damage if you decline it. Orders outside the US and Canada are insured unless you decline.</li>
+      <li>We don't ship UPS or DHL unless you prepare the label and email it to us.</li>
+    </ul>
+    <h2>Language</h2>
+    <p>
+      We communicate in English and through Google Translate. Our emails include both our original English and the
+      translation. We're not responsible for misinterpretation of translated text.
+    </p>
+    <p>Questions? Call <a href={site.phoneHref}>{site.phone}</a> or email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p class="hint"><a href="/media/brand/policies-2020.pdf">Original policy notice (PDF)</a></p>
+  </div>
+</Base>

@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import PartBrowser from '../../components/PartBrowser.astro';
+import HelpBox from '../../components/HelpBox.astro';
+import { getParts, categories } from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const parts = await getParts();
+  return categories
+    .map((c) => ({ params: { slug: c.slug.toLowerCase() }, props: { cat: c, parts: parts.filter((p) => p.data.category === c.slug) } }))
+    .filter((x) => x.props.parts.length);
+}
+const { cat, parts } = Astro.props;
+const fun: Record<string, { img: string; alt: string; text: string }> = {
+  springs: {
+    img: '/media/philips-burle-parts/batcave.jpg',
+    alt: 'Comic panel: Batman slapping Robin. Robin says he replaced the Batcave turnstile; Batman says all he needed was a spring from XIS Controls.',
+    text: 'Before you replace the whole turnstile, check the springs.',
+  },
+  solenoids: {
+    img: '/media/kong-removebg-preview-1.jpg',
+    alt: 'An angry gorilla on a city street',
+    text: 'Angry because someone put mayonnaise on your fries? We strive to get you the right part every time. Not sure what you need? Call us.',
+  },
+  microswitches: {
+    img: '/media/indiana.jpg',
+    alt: 'An endless warehouse of crates',
+    text: 'True "micro" switches. You can\'t buy them because we can\'t find them either.',
+  },
+  pawls: {
+    img: '/media/fun/nuts.jpg',
+    alt: 'A pile of nuts',
+    text: 'The company whose bread and butter was this turnstile decided to discontinue it. Nuts. We still make the parts.',
+  },
+};
+const f = fun[cat.slug];
+---
+
+<Base title={cat.name} description={`${cat.name} for turnstiles: ${cat.blurb}`}>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span><a href="/parts/">Parts</a><span aria-hidden="true">/</span>{cat.name}
+    </nav>
+    <header class="cathead">
+      <div>
+        <h1>{cat.name}</h1>
+        <p class="lede">{cat.blurb}</p>
+      </div>
+      {cat.aside && <p class="cathead__aside">{cat.aside}</p>}
+    </header>
+    <PartBrowser parts={parts} />
+    <div class="after">
+      {
+        f && (
+          <figure class="fun">
+            <img src={f.img} alt={f.alt} loading="lazy" />
+            <figcaption>{f.text}</figcaption>
+          </figure>
+        )
+      }
+      <HelpBox />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cathead {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 360px);
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  .cathead h1 {
+    font-size: var(--t-3xl);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .cathead__aside {
+    background: var(--yellow);
+    border: 2px solid var(--black);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-weight: 600;
+    margin: 8px 0 0;
+    transform: rotate(1deg);
+  }
+  .after {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 56px 0 72px;
+    align-items: start;
+  }
+  .fun {
+    margin: 0;
+    background: var(--bench);
+    padding: 16px;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .fun figcaption {
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .cathead {
+      grid-template-columns: 1fr;
+    }
+    .fun {
+      grid-template-columns: 110px 1fr;
+    }
+  }
+</style>

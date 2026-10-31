@@ -1,0 +1,154 @@
+# Web admin for xiscontrols.com (Sveltia CMS). Open https://xiscontrols.com/admin/
+# Every save is a commit to GitHub; Cloudflare Pages rebuilds the site in about a minute.
+backend:
+  name: github
+  repo: dgershman/xiscontrols
+  branch: main
+  # base_url: https://<your-sveltia-cms-auth-worker>.workers.dev   # enable for "Sign in with GitHub"
+
+site_url: https://xiscontrols.com
+display_url: https://xiscontrols.com
+logo_url: /media/brand/favicon.png
+media_folder: public/media/uploads
+public_folder: /media/uploads
+
+collections:
+  - name: parts
+    label: Parts
+    label_singular: Part
+    folder: src/content/parts
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{fields.sku}}"
+    identifier_field: sku
+    summary: "{{sku}}  {{title}}  ${{price}}"
+    sortable_fields: [sku, title, price, category, order]
+    view_filters:
+      - { label: Sold out, field: status, pattern: sold-out }
+      - { label: Call for price, field: status, pattern: call }
+    view_groups:
+      - { label: Category, field: category }
+    fields:
+      - { name: sku, label: Part number, widget: string, hint: "Shown big on the label and in search." }
+      - { name: title, label: Short name, widget: string, hint: "One line, e.g. 24VDC replacement solenoid" }
+      - name: category
+        label: Category
+        widget: select
+        options:
+              - { label: "Boards, controllers & PLCs", value: "boards" }
+              - { label: "Solenoids", value: "solenoids" }
+              - { label: "Springs", value: "springs" }
+              - { label: "Microswitches & sensors", value: "microswitches" }
+              - { label: "Bearings & cams", value: "bearings" }
+              - { label: "Pawls, linkages & hardware", value: "pawls" }
+              - { label: "Relays", value: "relays" }
+              - { label: "Power supplies & transformers", value: "power" }
+              - { label: "Shock absorbers & speed control", value: "shocks" }
+              - { label: "Lamps, switches & enclosures", value: "lamps" }
+              - { label: "Counters", value: "counters" }
+              - { label: "Mechanical assemblies", value: "assby" }
+              - { label: "Sliding gate parts", value: "gates" }
+              - { label: "Maintenance tools", value: "tools" }
+              - { label: "Used turnstiles", value: "UsedTurnstiles" }
+              - { label: "Bargain bin", value: "bargain" }
+      - { name: price, label: Price (USD), widget: number, value_type: float, required: false, hint: "Leave empty for Call for price." }
+      - { name: price_note, label: Price note, widget: string, required: false, hint: "e.g. Set of 2, Special order" }
+      - name: status
+        label: Availability
+        widget: select
+        default: in-stock
+        options:
+          - { label: In stock, value: in-stock }
+          - { label: Limited supply, value: limited }
+          - { label: Special order, value: special-order }
+          - { label: On backorder, value: backorder }
+          - { label: Out of stock, value: out-of-stock }
+          - { label: Coming soon, value: coming-soon }
+          - { label: Call for price, value: call }
+          - { label: Sold out, value: sold-out }
+      - name: options
+        label: Choices (when one listing has several part numbers)
+        widget: list
+        required: false
+        fields:
+          - { name: part, label: Part number, widget: string }
+          - { name: price, label: Price, widget: number, value_type: float, required: false }
+      - { name: best_choice, label: "Customer's preferred solution seal", widget: boolean, default: false }
+      - { name: hidden, label: Hide from the site, widget: boolean, default: false }
+      - name: brands
+        label: Fits brands
+        widget: select
+        multiple: true
+        required: false
+        options:
+              - "Robot"
+              - "Burle"
+              - "Philips"
+              - "Dearborn"
+              - "Tomsed"
+              - "Boon Edam"
+              - "Alvarado"
+              - "Perey"
+              - "Hayward"
+              - "Controlled Access"
+              - "Aegis Mectronics"
+              - "Automatic Systems"
+              - "Cubic"
+              - "Ingress Control"
+              - "Designed Security"
+              - "Horton"
+      - { name: models, label: Fits models, widget: list, required: false, hint: "e.g. THT-100, TUT-65, STG" }
+      - { name: style, label: Type, widget: select, multiple: true, required: false, options: ["Full height", "Waist high", "Gates", "Optical"] }
+      - { name: also_known_as, label: Also marked / OEM numbers, widget: list, required: false, hint: "Other numbers people might search for. These are searchable." }
+      - { name: keywords, label: Other words people use, widget: list, required: false, hint: "e.g. dog, coil, limit switch" }
+      - { name: images, label: Photos, widget: list, required: false, field: { name: image, label: Photo, widget: image } }
+      - name: documents
+        label: Manuals and drawings
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: file, label: File, widget: file }
+      - { name: related, label: Goes with (part file names), widget: list, required: false }
+      - { name: order, label: Sort order in category, widget: number, value_type: int, default: 999 }
+      - { name: body, label: Description, widget: markdown }
+
+  - name: settings
+    label: Site settings
+    files:
+      - name: categories
+        label: Categories
+        file: src/data/categories.json
+        format: json
+        fields:
+          - name: categories
+            label: Categories
+            widget: list
+            root: true
+            allow_add: false
+            fields:
+              - { name: slug, label: ID (don't change), widget: string }
+              - { name: name, label: Name, widget: string }
+              - { name: short, label: Short name, widget: string }
+              - { name: blurb, label: Description, widget: text }
+              - { name: aside, label: Sticky note (tips or jokes), widget: text, required: false }
+      - name: site
+        label: Contact info
+        file: src/data/site.json
+        format: json
+        fields:
+          - { name: name, label: Business name, widget: string }
+          - { name: phone, label: Phone, widget: string }
+          - { name: phoneHref, label: Phone link, widget: string, hint: "tel:+1 followed by digits" }
+          - { name: email, label: Email, widget: string }
+          - { name: duns, label: D-U-N-S, widget: string }
+          - { name: address, label: Address lines, widget: list }
+          - { name: tagline, label: Tagline, widget: string }
+          - { name: since, label: Since, widget: number }
+          - name: analytics
+            label: Analytics
+            widget: object
+            fields:
+              - { name: cloudflareToken, label: Cloudflare Web Analytics token, widget: string, required: false }
+              - { name: googleId, label: Google Analytics ID, widget: string, required: false }

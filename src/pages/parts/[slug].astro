@@ -1,0 +1,439 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PartCard from '../../components/PartCard.astro';
+import HelpBox from '../../components/HelpBox.astro';
+import site from '../../data/site.json';
+import {
+  getParts,
+  categoryOf,
+  categoryUrl,
+  brandUrl,
+  priceLabel,
+  partUrl,
+  STATUS,
+  canOrder,
+  type Part,
+} from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const parts = await getParts();
+  return parts.map((p) => ({ params: { slug: p.id }, props: { part: p, all: parts } }));
+}
+const { part, all } = Astro.props as { part: Part; all: Part[] };
+const d = part.data;
+const { Content } = await render(part);
+const cat = categoryOf(d.category);
+const st = STATUS[d.status];
+const imgs = d.images.length ? d.images : ['/media/brand/no-photo.svg'];
+const docs = d.documents;
+const orderable = canOrder(part);
+
+const explicit = d.related.map((id) => all.find((p) => p.id === id)).filter(Boolean) as Part[];
+const score = (p: Part) => p.data.brands.filter((b) => d.brands.includes(b)).length * 2 + p.data.models.filter((m) => d.models.includes(m)).length * 3;
+const auto = all
+  .filter((p) => p.id !== part.id && p.data.category !== 'UsedTurnstiles' && !explicit.includes(p) && p.data.status !== 'sold-out' && score(p) > 0)
+  .sort((a, b) => score(b) - score(a))
+  .slice(0, 8 - explicit.length);
+const related = [...explicit, ...auto].slice(0, 4);
+const options = d.options.length > 1 ? d.options : [];
+const docKind = (f: string) => (/\.pdf$/i.test(f) ? 'PDF' : /\.(jpe?g|png|gif)$/i.test(f) ? 'Image' : 'Page');
+---
+
+<Base title={`${d.sku}: ${d.title}`} description={`${d.sku} ${d.title}. ${priceLabel(part)}. Fits ${d.brands.join(', ') || 'see details'}.`} image={imgs[0]}>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span>
+      {cat && <><a href={categoryUrl(cat.slug)}>{cat.name}</a><span aria-hidden="true">/</span></>}
+      {d.sku}
+    </nav>
+
+    <div class="pdp">
+      <div class="gallery" data-gallery>
+        <div class="gallery__main">
+          <a href={imgs[0]} target="_blank" rel="noopener" data-main-link>
+            <img src={imgs[0]} alt={d.title} data-main />
+          </a>
+        </div>
+        {
+          imgs.length > 1 && (
+            <ul class="gallery__thumbs">
+              {imgs.map((src, i) => (
+                <li>
+                  <button type="button" data-thumb={src} aria-label={`Show photo ${i + 1}`} aria-pressed={i === 0 ? 'true' : 'false'}>
+                    <img src={src} alt="" loading="lazy" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        <p class="gallery__hint">Click the photo to open it full size.</p>
+      </div>
+
+      <div class="buy">
+        <p class="buy__sku">{d.sku}</p>
+        <h1 class="buy__title">{d.title}</h1>
+        {d.best_choice && <p class="buy__seal">Customer's preferred solution</p>}
+        <p class="buy__price" data-price-label>{priceLabel(part)}</p>
+        <p class="buy__status"><span class={`tag tag--${st.tone}`}>{st.label}</span>{d.price_note && d.options.length < 2 && !/^\$?\s*[\d,.]+$/.test(d.price_note) && <span class="buy__note">{d.price_note}</span>}</p>
+
+        {
+          orderable ? (
+            <form
+              class="buy__form"
+              data-add
+              data-id={part.id}
+              data-title={d.title}
+              data-url={partUrl(part)}
+              data-img={imgs[0]}
+              data-sku={d.sku}
+              data-price={d.price ?? ''}
+            >
+              {options.length > 0 && (
+                <div class="field">
+                  <label for="opt">Which one?</label>
+                  <select id="opt" name="opt">
+                    {options.map((o) => (
+                      <option value={o.part} data-price={o.price ?? ''}>
+                        {o.part}
+                        {o.price !== null ? ` (${o.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div class="buy__row">
+                <div class="field qty">
+                  <label for="qty">Qty</label>
+                  <input id="qty" name="qty" type="number" min="1" max="999" value="1" inputmode="numeric" />
+                </div>
+                <button class="btn btn--yellow buy__add" type="submit">Add to order request</button>
+              </div>
+              <p class="buy__added" data-added hidden role="status">
+                Added. <a href="/order/">Review your order request</a>
+              </p>
+              <p class="hint">
+                No account and no card needed. We confirm the parts, then email you an invoice with the exact shipping.
+              </p>
+            </form>
+          ) : (
+            <p class="buy__gone">
+              {d.status === 'sold-out' ? "This one's gone." : 'Not available to order yet.'} Call{' '}
+              <a href={site.phoneHref}>{site.phone}</a> and we'll tell you what replaces it.
+            </p>
+          )
+        }
+
+        <dl class="facts">
+          {
+            d.brands.length > 0 && (
+              <div>
+                <dt>Fits</dt>
+                <dd>
+                  {d.brands.map((b, i) => (
+                    <>
+                      <a href={brandUrl(b)}>{b}</a>
+                      {i < d.brands.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+          {d.models.length > 0 && <div><dt>Models</dt><dd>{d.models.join(', ')}</dd></div>}
+          {d.style.length > 0 && <div><dt>Type</dt><dd>{d.style.join(', ')}</dd></div>}
+          {d.also_known_as.length > 0 && <div><dt>Also marked</dt><dd>{d.also_known_as.join(', ')}</dd></div>}
+          {cat && <div><dt>Category</dt><dd><a href={categoryUrl(cat.slug)}>{cat.name}</a></dd></div>}
+        </dl>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="details__main">
+        <h2>Details</h2>
+        <div class="desc"><Content /></div>
+        {d.notes.length > 0 && <p class="desc__note"><strong>Note:</strong> {d.notes.join('. ')}</p>}
+        {
+          docs.length > 0 && (
+            <section class="docs">
+              <h2>Manuals and drawings</h2>
+              <ul>
+                {docs.map((doc) => (
+                  <li>
+                    <a href={doc.file} target="_blank" rel="noopener">
+                      <span class="docs__kind">{docKind(doc.file)}</span>
+                      {doc.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </div>
+      <HelpBox />
+    </div>
+
+    {
+      related.length > 0 && (
+        <section class="related">
+          <h2>Goes with, or fits the same machines</h2>
+          <div class="grid">{related.map((p) => <PartCard part={p} />)}</div>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  import { cart } from '../../lib/cart';
+  const g = document.querySelector('[data-gallery]');
+  if (g) {
+    const main = g.querySelector<HTMLImageElement>('[data-main]')!;
+    const link = g.querySelector<HTMLAnchorElement>('[data-main-link]')!;
+    g.querySelectorAll<HTMLButtonElement>('[data-thumb]').forEach((b) =>
+      b.addEventListener('click', () => {
+        main.src = link.href = b.dataset.thumb!;
+        g.querySelectorAll('[data-thumb]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      }),
+    );
+  }
+  const form = document.querySelector<HTMLFormElement>('[data-add]');
+  if (form) {
+    const opt = form.querySelector<HTMLSelectElement>('select[name=opt]');
+    const label = document.querySelector('[data-price-label]');
+    const fmt = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    opt?.addEventListener('change', () => {
+      const p = opt.selectedOptions[0].dataset.price;
+      if (label && p) label.textContent = fmt(Number(p));
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ds = form.dataset;
+      const qty = Math.max(1, Number((form.querySelector('input[name=qty]') as HTMLInputElement).value) || 1);
+      const sku = opt ? opt.value : ds.sku!;
+      const priceStr = opt ? opt.selectedOptions[0].dataset.price : ds.price;
+      cart.add(
+        {
+          id: ds.id!,
+          sku,
+          title: ds.title!,
+          price: priceStr ? Number(priceStr) : null,
+          url: ds.url!,
+          img: ds.img!,
+        },
+        qty,
+      );
+      form.querySelector<HTMLElement>('[data-added]')!.hidden = false;
+    });
+  }
+</script>
+
+<style>
+  .pdp {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    margin: 12px 0 40px;
+    align-items: start;
+  }
+  .gallery__main {
+    border: 2px solid var(--black);
+    border-radius: 4px;
+    background: var(--photo);
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+  .gallery__main img {
+    max-height: 100%;
+    width: min(100%, 560px);
+    object-fit: contain;
+  }
+  .gallery__main a {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+  }
+  .gallery__thumbs {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .gallery__thumbs button {
+    width: 76px;
+    height: 60px;
+    padding: 4px;
+    border: 2px solid var(--line);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+  }
+  .gallery__thumbs button[aria-pressed='true'] {
+    border-color: var(--black);
+  }
+  .gallery__thumbs img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .gallery__hint {
+    font-size: var(--t-xs);
+    color: var(--steel);
+    margin-top: 8px;
+  }
+  .buy {
+    border-left: 10px solid var(--yellow);
+    padding-left: clamp(16px, 2.5vw, 28px);
+  }
+  .buy__sku {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 0.95;
+    color: var(--black);
+    margin: 0 0 6px;
+    word-break: break-word;
+  }
+  .buy__title {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: var(--t-lg);
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .buy__seal {
+    display: inline-block;
+    background: var(--yellow);
+    border: 1.5px solid var(--black);
+    border-radius: 999px;
+    padding: 2px 12px;
+    font-weight: 700;
+    font-size: var(--t-sm);
+  }
+  .buy__price {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--black);
+    margin: 4px 0;
+  }
+  .buy__status {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .buy__note {
+    font-size: var(--t-sm);
+    color: var(--steel);
+  }
+  .buy__form {
+    margin: 18px 0 8px;
+    padding: 16px;
+    background: var(--bench);
+    border-radius: 4px;
+  }
+  .buy__row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  .buy__row .field {
+    margin: 0;
+  }
+  .qty {
+    width: 86px;
+  }
+  .qty input {
+    min-height: 46px;
+  }
+  .buy__add {
+    flex: 1;
+  }
+  .buy__added {
+    margin: 10px 0 0;
+    font-weight: 600;
+  }
+  .buy__gone {
+    margin: 18px 0;
+    padding: 14px 16px;
+    background: var(--bench);
+    font-weight: 600;
+  }
+  .facts {
+    margin: 18px 0 0;
+    display: grid;
+    gap: 0;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dt {
+    font-weight: 700;
+    font-size: var(--t-sm);
+  }
+  .facts dd {
+    margin: 0;
+  }
+  .details {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+    padding: 32px 0;
+    border-top: 2px solid var(--black);
+  }
+  .desc {
+    max-width: 68ch;
+  }
+  .desc__note {
+    background: var(--yellow-pale);
+    padding: 10px 14px;
+    max-width: 68ch;
+  }
+  .docs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .docs li {
+    margin-bottom: 8px;
+  }
+  .docs a {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 600;
+  }
+  .docs__kind {
+    font-size: var(--t-xs);
+    font-weight: 700;
+    color: var(--white);
+    background: var(--blue);
+    border-radius: 3px;
+    padding: 1px 6px;
+    min-width: 44px;
+    text-align: center;
+  }
+  .related {
+    padding: 24px 0 72px;
+  }
+  @media (max-width: 860px) {
+    .pdp,
+    .details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

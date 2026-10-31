@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Page not found">
+  <div class="wrap nf">
+    <div>
+      <h1 style="font-size:clamp(2.4rem,6vw,4rem);font-weight:800">That page went the way of the Perey Roto-Gate.</h1>
+      <p class="lede">It's not here anymore, but the parts probably are. Search above, <a href="/parts/">browse all parts</a>, or call {site.phone}.</p>
+    </div>
+    <img src="/media/sad-bear.jpg" alt="A teddy bear with its face to the wall" />
+  </div>
+</Base>
+
+<style>
+  .nf { padding-top: 56px; padding-bottom: 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 40px; align-items: center; }
+  @media (max-width: 700px) { .nf { grid-template-columns: 1fr; } .nf img { max-width: 220px; } }
+</style>

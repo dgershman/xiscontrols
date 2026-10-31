@@ -1,0 +1,130 @@
+---
+import { type Part, partUrl, priceLabel, STATUS } from '../lib/catalog';
+interface Props {
+  part: Part;
+}
+const { part } = Astro.props;
+const d = part.data;
+const st = STATUS[d.status];
+const img = d.images[0] ?? '/media/brand/no-photo.svg';
+---
+
+<article
+  class="card"
+  data-card
+  data-brands={d.brands.join('|')}
+  data-style={d.style.join('|')}
+  data-status={d.status}
+  data-price={d.price ?? ''}
+>
+  <a href={partUrl(part)} class="card__link">
+    <div class="card__img">
+      <img src={img} alt={d.title} loading="lazy" decoding="async" />
+      {d.best_choice && <span class="card__seal" title="Customer's preferred solution">Preferred</span>}
+    </div>
+    <div class="card__label">
+      <p class="card__sku">{d.sku}</p>
+      <h3 class="card__title">{d.title}</h3>
+      {d.brands.length > 0 && <p class="card__fits">Fits {d.brands.slice(0, 3).join(', ')}{d.brands.length > 3 ? ' +' : ''}</p>}
+      <p class="card__row">
+        <span class="card__price">{priceLabel(part)}</span>
+        {d.status !== 'in-stock' && <span class={`tag tag--${st.tone}`}>{st.label}</span>}
+      </p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card {
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+  }
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card__link:hover .card__label {
+    background: var(--yellow-pale);
+  }
+  .card__link:hover .card__title {
+    text-decoration: underline;
+  }
+  .card__img {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--photo);
+    border-bottom: 2px solid var(--black);
+    display: grid;
+    place-items: center;
+    padding: 10px;
+  }
+  .card__img img {
+    max-height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  .card__seal {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--yellow);
+    color: var(--black);
+    border: 1.5px solid var(--black);
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .card__label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px 14px;
+    border-left: 8px solid var(--yellow);
+  }
+  .card__sku {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 1.45rem;
+    line-height: 1;
+    color: var(--black);
+    margin: 0 0 4px;
+    word-break: break-word;
+  }
+  .card__title {
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: var(--t-sm);
+    line-height: 1.3;
+    color: var(--text);
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card__fits {
+    font-size: var(--t-xs);
+    color: var(--steel);
+    margin: 0 0 8px;
+  }
+  .card__row {
+    margin: auto 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card__price {
+    font-weight: 700;
+    color: var(--black);
+  }
+</style>

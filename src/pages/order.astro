@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Your order request">
+  <div class="wrap order">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Order request</nav>
+    <h1>Your order request</h1>
+
+    <div class="order__grid">
+      <section aria-labelledby="items-h">
+        <h2 id="items-h" class="visually-hidden">Parts</h2>
+        <div data-items></div>
+        <p class="order__empty" data-empty hidden>
+          Nothing here yet. <a href="/parts/">Browse parts</a> or search above. If you already know your part numbers, you can
+          also just email them to <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+        <aside class="why">
+          <img src="/media/puzzle.jpg" alt="A jigsaw puzzle with one piece missing" loading="lazy" />
+          <div>
+            <h2>Why a request and not a checkout?</h2>
+            <p>
+              It's easy to pick a spring or pawl that looks right and isn't. Before we charge you anything, we check every
+              order against the machine you told us about. Then we email an invoice with the exact shipping, which we can
+              only know once the box is packed. Pay by card or PayPal.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="send" aria-labelledby="send-h" data-send-wrap>
+        <h2 id="send-h">Send the request</h2>
+        <form data-order-form novalidate>
+          <div class="two">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="company">Company or facility</label>
+              <input id="company" name="company" autocomplete="organization" required />
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="address">Ship to</label>
+            <textarea id="address" name="address" rows="3" autocomplete="shipping street-address" required
+              placeholder="Street, city, state, ZIP (and country if outside the US)"></textarea>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="machine">Turnstile make and model</label>
+              <input id="machine" name="machine" placeholder="e.g. Tomsed THT-100, Philips STG" />
+              <p class="hint">Optional, but it lets us double-check fit.</p>
+            </div>
+            <div class="field">
+              <label for="po">PO number</label>
+              <input id="po" name="po" />
+              <p class="hint">Optional.</p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="shipping">Shipping preference</label>
+            <select id="shipping" name="shipping">
+              <option>Best value (USPS Priority or FedEx Ground)</option>
+              <option>Fastest available (express)</option>
+              <option>Use my FedEx account (put the number in the notes)</option>
+              <option>I'll pick up locally</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="notes">Anything else we should know?</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+          </div>
+          <p class="order__err" data-err role="alert" hidden></p>
+          <button class="btn btn--yellow send__btn" type="submit" data-submit>Send order request</button>
+          <p class="hint">
+            No account and no card needed now. You'll get a copy by email. Questions? Call {site.phone}.
+          </p>
+        </form>
+      </section>
+    </div>
+
+    <section class="done" data-done hidden>
+      <h2>Request sent.</h2>
+      <p class="lede">
+        We'll check the parts against your machine and email an invoice with the exact shipping. If anything looks off,
+        we'll call you first.
+      </p>
+      <p><a class="btn" href="/parts/">Back to parts</a></p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { cart, type CartItem } from '../lib/cart';
+  const site = { email: 'xiscontrols@gmail.com', phone: '919-412-9200' };
+  const fmt = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const list = document.querySelector<HTMLElement>('[data-items]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const sendWrap = document.querySelector<HTMLElement>('[data-send-wrap]')!;
+
+  function paint() {
+    const items = cart.items();
+    empty.hidden = items.length > 0;
+    sendWrap.hidden = items.length === 0;
+    if (!items.length) {
+      list.innerHTML = '';
+      return;
+    }
+    const { total, unpriced } = cart.subtotal();
+    list.innerHTML = `<table class="lines"><thead><tr><th scope="col">Part</th><th scope="col">Qty</th><th scope="col" class="r">Each</th><th scope="col"><span class="visually-hidden">Remove</span></th></tr></thead><tbody>
+      ${items
+        .map(
+          (i: CartItem) => `<tr>
+        <td><a href="${i.url}" class="ln"><img src="${encodeURI(i.img)}" alt=""><span><strong>${esc(i.sku)}</strong><span>${esc(i.title)}</span></span></a></td>
+        <td><input type="number" min="0" max="999" value="${i.qty}" data-qty="${esc(i.sku)}" aria-label="Quantity of ${esc(i.sku)}" inputmode="numeric"></td>
+        <td class="r">${i.price === null ? 'Call' : fmt(i.price)}</td>
+        <td><button type="button" class="rm" data-rm="${esc(i.sku)}">Remove</button></td></tr>`,
+        )
+        .join('')}
+      </tbody></table>
+      <p class="sub"><span>Parts subtotal</span><strong>${fmt(total)}${unpriced ? ' + priced on confirmation' : ''}</strong></p>
+      <p class="hint">Shipping and any card or international fees are added on the invoice. <a href="/policies/">How we ship and bill</a></p>`;
+  }
+  list.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.dataset.qty) cart.setQty(t.dataset.qty, Number(t.value) || 0);
+  });
+  list.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-rm]');
+    if (t) cart.remove(t.dataset.rm!);
+  });
+  window.addEventListener('cart:change', paint);
+  paint();
+
+  const form = document.querySelector<HTMLFormElement>('[data-order-form]')!;
+  const err = document.querySelector<HTMLElement>('[data-err]')!;
+  const btn = document.querySelector<HTMLButtonElement>('[data-submit]')!;
+
+  function mailtoFallback(data: Record<string, string>) {
+    const lines = cart.items().map((i) => `${i.qty} x ${i.sku}  ${i.title}  ${i.price === null ? 'call' : fmt(i.price)}`);
+    const body = [
+      'Order request', '', ...lines, '',
+      `Name: ${data.name}`, `Company: ${data.company}`, `Email: ${data.email}`, `Phone: ${data.phone}`,
+      `Ship to: ${data.address}`, `Machine: ${data.machine}`, `PO: ${data.po}`, `Shipping: ${data.shipping}`, '', data.notes,
+    ].join('\n');
+    return `mailto:${site.email}?subject=${encodeURIComponent('Order request from ' + (data.company || data.name))}&body=${encodeURIComponent(body)}`;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+    const missing = ['name', 'company', 'email', 'phone', 'address'].filter((k) => !data[k]?.trim());
+    if (missing.length) {
+      err.textContent = 'Fill in your name, company, email, phone and ship-to address so we can send the invoice.';
+      err.hidden = false;
+      form.querySelector<HTMLElement>(`[name=${missing[0]}]`)?.focus();
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
+      err.textContent = 'That email address looks incomplete. We need it to send your invoice.';
+      err.hidden = false;
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+      const res = await fetch('/api/order-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer: data, items: cart.items(), website: '' }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      cart.clear();
+      document.querySelector('.order__grid')!.remove();
+      document.querySelector<HTMLElement>('[data-done]')!.hidden = false;
+      window.scrollTo({ top: 0 });
+    } catch {
+      err.innerHTML = `The request didn't go through from here. <a href="${mailtoFallback(data)}">Send it by email instead</a> (it's all filled in), or call ${site.phone}.`;
+      err.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Send order request';
+    }
+  });
+</script>
+
+<style>
+  .order {
+    padding-bottom: 72px;
+  }
+  .order h1 {
+    font-size: var(--t-3xl);
+    font-weight: 800;
+  }
+  .order__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+  .send {
+    background: var(--bench);
+    border-radius: 4px;
+    padding: 20px;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .send__btn {
+    width: 100%;
+  }
+  .order__err {
+    background: #fde8e6;
+    border-left: 6px solid var(--red);
+    padding: 10px 14px;
+    font-weight: 600;
+  }
+  .order__empty {
+    font-size: var(--t-lg);
+    padding: 20px;
+    background: var(--bench);
+  }
+  .why {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 18px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid var(--black);
+    align-items: start;
+  }
+  .why h2 {
+    font-size: 1.4rem;
+  }
+  .done {
+    padding: 24px 0;
+  }
+  .done h2 {
+    font-size: var(--t-2xl);
+  }
+  @media (max-width: 860px) {
+    .order__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .two {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .why {
+      grid-template-columns: 90px 1fr;
+    }
+  }
+</style>
+
+<style is:global>
+  .lines {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .lines th {
+    text-align: left;
+    font-size: var(--t-sm);
+    border-bottom: 2px solid var(--black);
+    padding: 6px 4px;
+  }
+  .lines td {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 4px;
+    vertical-align: middle;
+  }
+  .lines .r {
+    text-align: right;
+    white-space: nowrap;
+  }
+  .lines .ln {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .lines .ln img {
+    width: 56px;
+    height: 44px;
+    object-fit: contain;
+    background: var(--white);
+    border: 1px solid var(--line);
+    flex: none;
+  }
+  .lines .ln strong {
+    display: block;
+    font-family: var(--f-cond);
+    font-size: 1.2rem;
+    color: var(--black);
+  }
+  .lines .ln span span {
+    font-size: var(--t-sm);
+    color: var(--steel);
+  }
+  .lines input {
+    width: 70px;
+    padding: 6px 8px;
+  }
+  .lines .rm {
+    background: none;
+    border: 0;
+    color: var(--blue);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--t-sm);
+  }
+  .sub {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--t-lg);
+    margin: 14px 0 4px;
+  }
+  @media (max-width: 520px) {
+    .lines .ln img {
+      display: none;
+    }
+  }
+</style>

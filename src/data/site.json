@@ -1,0 +1,11 @@
+{
+  "name": "XIS Controls",
+  "phone": "919-412-9200",
+  "phoneHref": "tel:+19194129200",
+  "email": "xiscontrols@gmail.com",
+  "duns": "04-104-3909",
+  "address": ["2408 Stewart Street", "Fuquay-Varina, NC 27526"],
+  "tagline": "Making Obsolescence Obsolete",
+  "since": 1981,
+  "analytics": { "cloudflareToken": "", "googleId": "" }
+}

@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="About XIS Controls" description="Engineers and innovators. Designing turnstile control systems since 1981.">
+  <div class="wrap about">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>About</nav>
+    <h1>We not only sell the parts. We know how the stuff works.</h1>
+    <div class="about__grid">
+      <div class="prose">
+        <p class="lede">
+          In 1981 we began designing custom circuit and logic solutions for the access control industry. Under the name Hard
+          Logic, we were the force behind the electronics and logic controls in turnstiles built by Tomsed Corporation, and
+          we designed many of the original, replacement and upgrade controllers still running today.
+        </p>
+        <p>
+          Tomsed acquired several other companies and their product lines over the years, including the Philips (formerly
+          Robot and Burle) turnstile business in 2001. Support for all of those legacy products now lives here at XIS Controls.
+        </p>
+        <p>
+          We're not part of any other company in this business, and never have been. If you've seen our photos on someone
+          else's site, they were copied. If they can't sell you the part, call us. We probably make it.
+        </p>
+
+        <h2>How it started</h2>
+        <blockquote>
+          <p>
+            In 1977, while working for a major security integrator in New York City, I met Thomas Sedivy. Tom was working for
+            Perey in those days and his feeling was that he could do the turnstile product in a much more reliable, secure,
+            aesthetic and cost effective way. Tom and I would cross paths many times and we became friends. In 1981 Tomsed
+            (yes, a concatenation of his name) opened its doors and he asked me to be his electrical designer. Tomsed
+            established themselves as the number one in the turnstile business in the USA in a short period of time.
+          </p>
+          <footer>Al Gershman</footer>
+        </blockquote>
+
+        <h2>From the former President and CEO of Tomsed</h2>
+        <blockquote>
+          <p>
+            I have known Al Gershman and his prior company, Hard Logic, since my first days at TOMSED. He designed many of our
+            control circuits and was always available for special projects and help with any customer's unique needs. To see
+            now that Al has established XIS Controls with the specific goal of supporting the entire range of TOMSED and
+            Philips products gives me great comfort knowing that our loyal customers will once again receive the service they
+            deserve.
+          </p>
+          <footer>Robert T. Sedivy</footer>
+        </blockquote>
+
+        <h2>Al Gershman</h2>
+        <p>
+          As Chief Engineer at ISSCO Corp., Al designed security for the Metropolitan Museum, the Frick Collection, many Wall
+          Street firms, and the system that followed "The Treasures of King Tut" on its US tour. As Principal Research Engineer
+          for Keyspan Energy he built a fiber optic campus network, access control for underground regulator vaults and SCADA
+          hardware. As Director of Research and Development at Tomsed he led one of the industry's first optical turnstiles and
+          all of its turnstile control systems. He is a former President and CEO of ENTELEC, the Energy Telecommunications and
+          Electrical Association.
+        </p>
+      </div>
+
+      <aside class="side">
+        <figure class="lillie">
+          <img src="/media/philips-burle-parts/lillie-and-mouse-inpixio.jpg" alt="Lillie, a tabby cat, with a toy mouse" loading="lazy" />
+          <figcaption>
+            <strong>Meet Lillie, head of Quality Catrol.</strong> Born in 2006 in Lillington, NC, she patrolled the factory floor
+            at Tomsed and kept it clear of mice, until new owners decided she was a nuisance. She was scooped up and brought to
+            Fuquay-Varina, where nothing leaves our facility without her meow of approval.
+          </figcaption>
+        </figure>
+        <div class="contact">
+          <h2>Get in touch</h2>
+          <p class="contact__phone"><a href={site.phoneHref}>{site.phone}</a></p>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+          <p>{site.address[0]}<br />{site.address[1]}</p>
+          <p>Email any time, including after hours and weekends. Please include your name and phone number.</p>
+          <p class="hint">D-U-N-S {site.duns}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about {
+    padding-bottom: 72px;
+  }
+  .about h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    max-width: 20ch;
+  }
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 64px);
+    align-items: start;
+  }
+  h2 {
+    margin-top: 36px;
+  }
+  blockquote {
+    margin: 0 0 1em;
+    padding: 4px 0 4px 20px;
+    border-left: 6px solid var(--yellow);
+  }
+  blockquote footer {
+    font-weight: 700;
+  }
+  .lillie {
+    margin: 0 0 24px;
+    background: var(--bench);
+    padding: 14px;
+    border-radius: 4px;
+  }
+  .lillie figcaption {
+    margin-top: 10px;
+    font-size: var(--t-sm);
+  }
+  .contact {
+    border: 2px solid var(--black);
+    border-left: 10px solid var(--yellow);
+    border-radius: 4px;
+    padding: 16px 18px;
+  }
+  .contact h2 {
+    margin-top: 0;
+  }
+  .contact__phone a {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--black);
+    text-decoration: none;
+  }
+  @media (max-width: 860px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

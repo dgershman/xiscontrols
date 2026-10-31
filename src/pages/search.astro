@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import HelpBox from '../components/HelpBox.astro';
+---
+
+<Base title="Search">
+  <div class="wrap" style="padding-bottom:72px">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Search</nav>
+    <h1 data-heading>Search parts</h1>
+    <p class="lede" data-sub>Search by part number, the number printed on your old part, the brand, the model, or what it does.</p>
+    <div class="results grid" data-results></div>
+    <div class="nohit" data-nohit hidden>
+      <p class="lede">
+        Nothing matched. Parts get called a lot of different things, and the number on yours may be an OEM number we don't
+        list yet. Send a photo and we'll identify it.
+      </p>
+      <div style="max-width:560px"><HelpBox heading="Let us find it for you" /></div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { load, search, type Row } from '../lib/search';
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const q = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+  const out = document.querySelector<HTMLElement>('[data-results]')!;
+  const card = (r: Row) => `<article class="card"><a class="card__link" href="${r.url}">
+    <div class="card__img"><img src="${encodeURI(r.img)}" alt="" loading="lazy"></div>
+    <div class="card__label"><p class="card__sku">${esc(r.sku)}</p><h3 class="card__title">${esc(r.title)}</h3>
+    ${r.brands.length ? `<p class="card__fits">Fits ${esc(r.brands.slice(0, 3).join(', '))}</p>` : ''}
+    <p class="card__row"><span class="card__price">${esc(r.price)}</span>${r.status && r.status !== 'In stock' ? `<span class="tag tag--${r.tone}">${esc(r.status)}</span>` : ''}</p></div></a></article>`;
+  if (q) {
+    document.title = `"${q}" | Search | XIS Controls`;
+    document.querySelector('[data-heading]')!.textContent = `Results for "${q}"`;
+    load().then(() => {
+      const hits = search(q, 120);
+      document.querySelector('[data-sub]')!.textContent = hits.length
+        ? `${hits.length} part${hits.length === 1 ? '' : 's'} found. Closest matches first.`
+        : '';
+      out.innerHTML = hits.map(card).join('');
+      (document.querySelector('[data-nohit]') as HTMLElement).hidden = hits.length > 0;
+    });
+  }
+</script>
+
+<style is:global>
+  /* search results reuse the PartCard look */
+  [data-results] .card { background: var(--white); border: 2px solid var(--black); border-radius: 4px; overflow: hidden; display: flex; }
+  [data-results] .card__link { display: flex; flex-direction: column; width: 100%; text-decoration: none; color: inherit; }
+  [data-results] .card__link:hover .card__label { background: var(--yellow-pale); }
+  [data-results] .card__img { background: var(--photo); aspect-ratio: 4/3; border-bottom: 2px solid var(--black); display: grid; place-items: center; padding: 10px; }
+  [data-results] .card__img img { max-height: 100%; width: 100%; object-fit: contain; }
+  [data-results] .card__label { flex: 1; display: flex; flex-direction: column; padding: 10px 12px 12px 14px; border-left: 8px solid var(--yellow); }
+  [data-results] .card__sku { font-family: var(--f-cond); font-weight: 800; font-size: 1.45rem; line-height: 1; color: var(--black); margin: 0 0 4px; word-break: break-word; }
+  [data-results] .card__title { font-family: var(--f-body); font-weight: 500; font-size: var(--t-sm); line-height: 1.3; margin: 0 0 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  [data-results] .card__fits { font-size: var(--t-xs); color: var(--steel); margin: 0 0 8px; }
+  [data-results] .card__row { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; align-items: center; }
+  [data-results] .card__price { font-weight: 700; color: var(--black); }
+</style>

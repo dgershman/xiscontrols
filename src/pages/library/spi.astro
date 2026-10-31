@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Serial Port Interface TX9-TMR/2" description="Activate a turnstile, gate, door strike or mag lock from a PC serial port, or turn a Wiegand reader into a dry contact.">
+  <div class="wrap prose" style="padding-bottom:72px">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/library/">Library</a><span aria-hidden="true">/</span>Serial Port Interface</nav>
+    <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800">Serial Port Interface</h1>
+    <p class="lede">
+      A computer-controlled relay. Send any ASCII character to the PC's serial port and the relay activates your turnstile,
+      gate operator, door strike or magnetic lock. Common in club management and parking garage systems.
+    </p>
+    <p>
+      <strong>New:</strong> it can also turn a stand-alone Wiegand reader into a dry contact closure. No access control
+      computer or software needed. It responds to all cards and fobs the reader recognizes, and supplies 12VDC to power the
+      reader. Simple 2 to 4 wire hookup.
+    </p>
+    <p>Check with your software vendor that the authorization signal sends ASCII characters to the serial port. You need one interface and one serial port per controlled output.</p>
+    <h2>Setup</h2>
+    <ol>
+      <li>Connect your hardware to the Normally Open terminals (turnstiles, gate operators, fail-lock strikes) or Normally Closed terminals (fail-safe strikes, mag locks).</li>
+      <li>Connect the DB9 connector to the PC's serial port. A USB to serial adapter works on computers without one.</li>
+      <li>Connect the supplied arc suppression snubber capacitor across the terminals you're using.</li>
+      <li>Plug the power supply into a 115VAC outlet.</li>
+      <li>Set the timer: minimum for momentary-contact devices like turnstiles, or the desired hold-open time (up to about 1 minute) for strikes and mag locks without their own timer.</li>
+    </ol>
+    <p><a class="btn" href="/parts/tx9-tmr-2/">Order the TX9-TMR/2</a> <a href="/media/spi/spi-hookup.pdf" style="margin-left:12px">Hookup diagram (PDF)</a></p>
+  </div>
+</Base>

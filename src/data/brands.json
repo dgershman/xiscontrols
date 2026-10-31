@@ -1,0 +1,18 @@
+[
+  { "name": "Robot", "slug": "robot", "lineage": "Robot Industries, later Burle, later Philips" },
+  { "name": "Burle", "slug": "burle", "lineage": "Burle Industries (RCA family), took over Robot" },
+  { "name": "Philips", "slug": "philips", "lineage": "Philips CSS, took over Burle; turnstile line sold to Tomsed in 2001" },
+  { "name": "Dearborn", "slug": "dearborn", "lineage": "Dearborn Access Control, Philips lineage" },
+  { "name": "Tomsed", "slug": "tomsed", "lineage": "Tomsed Corp. (1981), later bought by Boon Edam" },
+  { "name": "Boon Edam", "slug": "boon-edam", "lineage": "Bought Tomsed; Turnlock and Trilock lines" },
+  { "name": "Alvarado", "slug": "alvarado", "lineage": "" },
+  { "name": "Perey", "slug": "perey", "lineage": "Perey Turnstiles, out of business. Roto-Gate parts still here." },
+  { "name": "Hayward", "slug": "hayward", "lineage": "" },
+  { "name": "Controlled Access", "slug": "controlled-access", "lineage": "" },
+  { "name": "Aegis Mectronics", "slug": "aegis-mectronics", "lineage": "" },
+  { "name": "Automatic Systems", "slug": "automatic-systems", "lineage": "" },
+  { "name": "Cubic", "slug": "cubic", "lineage": "" },
+  { "name": "Ingress Control", "slug": "ingress-control", "lineage": "" },
+  { "name": "Designed Security", "slug": "designed-security", "lineage": "" },
+  { "name": "Horton", "slug": "horton", "lineage": "Horton Automatics 98xx turnstiles were built by Burle" }
+]

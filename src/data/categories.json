@@ -1,0 +1,18 @@
+[
+  { "slug": "boards", "name": "Boards, controllers & PLCs", "short": "Boards & PLCs", "blurb": "Control boards and programmed PLCs. We designed most of the originals, so we know what replaces what.", "aside": "" },
+  { "slug": "solenoids", "name": "Solenoids", "short": "Solenoids", "blurb": "Complete solenoids, coils only, brackets and kits for full height and waist high turnstiles.", "aside": "Never lubricate solenoid plungers or coils. Lubricant + time = adhesive." },
+  { "slug": "springs", "name": "Springs", "short": "Springs", "blurb": "Pawl, main, centering and connecting springs. Ours are annealed and plated so they last on the shelf and in the field.", "aside": "F = -kx is Hooke's Law. Boing is Oops's Law." },
+  { "slug": "microswitches", "name": "Microswitches & sensors", "short": "Microswitches", "blurb": "Rotation and limit microswitches, actuators, activator disks and optical sensors.", "aside": "A one-way microswitch folds one way and stays rigid the other. A two-way stays rigid both ways. The factory has always gotten this backwards." },
+  { "slug": "bearings", "name": "Bearings & cams", "short": "Bearings", "blurb": "Top and bottom bearings, flanges, thrust discs, cams and the grease to go with them.", "aside": "" },
+  { "slug": "pawls", "name": "Pawls, linkages & hardware", "short": "Pawls & hardware", "blurb": "Pawls (some folks call them dogs), linkages, studs and the hardware that holds it all together. Where we don't have them, we make them.", "aside": "" },
+  { "slug": "relays", "name": "Relays", "short": "Relays", "blurb": "Control, time delay, plug-in and solder-in relays for Robot, Burle, Philips, Tomsed and Alvarado.", "aside": "" },
+  { "slug": "power", "name": "Power supplies & transformers", "short": "Power supplies", "blurb": "Transformers, rectifiers, power supplies and fuses.", "aside": "" },
+  { "slug": "shocks", "name": "Shock absorbers & speed control", "short": "Shocks", "blurb": "Shock absorbers, governors, brake pads and self-centering kits.", "aside": "" },
+  { "slug": "lamps", "name": "Lamps, switches & enclosures", "short": "Lamps & switches", "blurb": "Indicator lamps, LED sets, pushbuttons, key switches and enclosures.", "aside": "" },
+  { "slug": "counters", "name": "Counters", "short": "Counters", "blurb": "Mechanical and electric passage counters and accessories.", "aside": "" },
+  { "slug": "assby", "name": "Mechanical assemblies", "short": "Assemblies", "blurb": "Complete hub, shaft, ratchet and lock assemblies, with exploded drawings so you can find the piece you need.", "aside": "" },
+  { "slug": "gates", "name": "Sliding gate parts", "short": "Gate parts", "blurb": "Parts for Burle, Philips, Tomsed and Boon Edam slide gates: AHSG, CHSG, SHSG and THG-51.", "aside": "" },
+  { "slug": "tools", "name": "Maintenance tools", "short": "Tools", "blurb": "The tools we use on these machines every day.", "aside": "" },
+  { "slug": "UsedTurnstiles", "name": "Used turnstiles", "short": "Used turnstiles", "blurb": "Restored and used turnstiles when we have them.", "aside": "" },
+  { "slug": "bargain", "name": "Bargain bin", "short": "Bargains", "blurb": "New old stock and odd lots at a discount while they last.", "aside": "" }
+]

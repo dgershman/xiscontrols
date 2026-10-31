@@ -1,0 +1,174 @@
+{
+ "no_price": [
+  {
+   "row": 3,
+   "sku": "TCB 6.4 Red",
+   "price_raw": "Please order the Green version if you are needing a replacemen board for a Pupkit. The Red version is only available when purchasing a new Pupkit"
+  },
+  {
+   "row": 4,
+   "sku": "TCB 904A",
+   "price_raw": "We are Engineers & Innovators Making Obsolescence Obsolete"
+  },
+  {
+   "row": 33,
+   "sku": "S-09060",
+   "price_raw": ""
+  },
+  {
+   "row": 38,
+   "sku": "77-125",
+   "price_raw": "Call For Current Price"
+  },
+  {
+   "row": 39,
+   "sku": "15-146",
+   "price_raw": "Call For Current Price"
+  },
+  {
+   "row": 126,
+   "sku": "JV-5",
+   "price_raw": "Use: 55-356"
+  },
+  {
+   "row": 145,
+   "sku": "53-851- G",
+   "price_raw": "Green SOLD OUT"
+  },
+  {
+   "row": 158,
+   "sku": "53-791",
+   "price_raw": ""
+  },
+  {
+   "row": 189,
+   "sku": "04-1310",
+   "price_raw": "Special Order Call"
+  },
+  {
+   "row": 271,
+   "sku": "86-123",
+   "price_raw": "Parts Breakdown"
+  },
+  {
+   "row": 272,
+   "sku": "86-105",
+   "price_raw": "Parts Breakdown"
+  },
+  {
+   "row": 275,
+   "sku": "TUT-65RTB",
+   "price_raw": "Call for Pricing"
+  },
+  {
+   "row": 276,
+   "sku": "TUT-65ES",
+   "price_raw": "Call for Pricing"
+  },
+  {
+   "row": 278,
+   "sku": "C82092",
+   "price_raw": "Mechanism Drawing Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery"
+  },
+  {
+   "row": 279,
+   "sku": "C82072",
+   "price_raw": "Mechanism Drawing Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery"
+  },
+  {
+   "row": 280,
+   "sku": "53-771",
+   "price_raw": "Mechanism Drawing Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery"
+  },
+  {
+   "row": 281,
+   "sku": "C82332",
+   "price_raw": "Mechanism Drawing Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery"
+  },
+  {
+   "row": 284,
+   "sku": "53-769",
+   "price_raw": "Mechanism Drawing Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery Special Order Items Longer Lead Times Apply Call For Pricing and Delivery"
+  }
+ ],
+ "multi_price": [
+  {
+   "row": 131,
+   "sku": "80-5Cxx",
+   "price_raw": "Non-Resettable $65.00 Resettable $75.00"
+  },
+  {
+   "row": 193,
+   "sku": "45-019F",
+   "price_raw": "NOW $19.95 Was $44.00"
+  }
+ ],
+ "needs_review": [
+  {
+   "row": 152,
+   "part_raw": "AV-PB",
+   "why": "no part number"
+  },
+  {
+   "row": 162,
+   "part_raw": "HAY-24VDC PS",
+   "why": "no part number"
+  },
+  {
+   "row": 173,
+   "part_raw": "FCore",
+   "why": "no part number"
+  },
+  {
+   "row": 274,
+   "part_raw": "MST-Frame",
+   "why": "no part number"
+  }
+ ],
+ "missing_media": [
+  "Philips & Burle Parts/CA-0401.jpeg"
+ ],
+ "counts": {
+  "boards": 16,
+  "relays": 13,
+  "solenoids": 27,
+  "springs": 47,
+  "microswitches": 27,
+  "counters": 7,
+  "lamps": 20,
+  "power": 18,
+  "shocks": 7,
+  "bearings": 34,
+  "pawls": 35,
+  "assby": 19,
+  "UsedTurnstiles": 3,
+  "gates": 7,
+  "tools": 9,
+  "bargain": 1
+ },
+ "status": {
+  "in-stock": 253,
+  "call": 8,
+  "out-of-stock": 1,
+  "sold-out": 5,
+  "special-order": 18,
+  "limited": 5
+ },
+ "brands": {
+  "Robot": 28,
+  "Burle": 40,
+  "Philips": 40,
+  "Dearborn": 2,
+  "Tomsed": 88,
+  "Boon Edam": 67,
+  "Aegis Mectronics": 2,
+  "Designed Security": 1,
+  "Alvarado": 30,
+  "Controlled Access": 7,
+  "Hayward": 8,
+  "Perey": 18,
+  "Ingress Control": 3,
+  "Automatic Systems": 1,
+  "Cubic": 1
+ }
+}

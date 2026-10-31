@@ -1,0 +1,299 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Help me identify a part" description="Send photos of your turnstile and the part you need. We'll identify the manufacturer, the model and the part.">
+  <div class="wrap idp">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Help me identify</nav>
+    <div class="idp__grid">
+      <div>
+        <h1>Send us photos. We'll tell you what it is.</h1>
+        <p class="lede">
+          Photos tell us who made your turnstile, and that's most of the problem. Then we can tell you which part it needs,
+          or whether it can be repaired. No charge for the help.
+        </p>
+
+        <form class="idform" data-id-form novalidate>
+          <div class="field">
+            <label for="photos">Photos</label>
+            <div class="drop" data-drop>
+              <input id="photos" name="photos" type="file" accept="image/*" multiple data-files />
+              <p><strong>Add photos</strong> or drag them here. Up to 6.</p>
+            </div>
+            <ul class="thumbs" data-thumbs></ul>
+          </div>
+          <div class="field">
+            <label for="what">What's going on?</label>
+            <textarea id="what" name="what" rows="4" required
+              placeholder="e.g. Full height turnstile won't lock in one direction. Previous contractor disconnected some wires."></textarea>
+          </div>
+          <div class="field">
+            <label for="machine">Make and model, if you know it</label>
+            <input id="machine" name="machine" placeholder="Anything on a sticker or plate helps" />
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="company">Company or facility</label>
+              <input id="company" name="company" autocomplete="organization" />
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" />
+              <p class="hint">Easier to talk it through? Leave a number and we'll call.</p>
+            </div>
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="visually-hidden" aria-hidden="true" />
+          <p class="err" data-err role="alert" hidden></p>
+          <button class="btn btn--yellow" type="submit" data-submit>Send photos</button>
+        </form>
+        <div class="done" data-done hidden>
+          <h2>Got them.</h2>
+          <p class="lede">We'll look the photos over and get back to you, usually by email. If it's quicker to talk, we'll call.</p>
+        </div>
+      </div>
+
+      <aside class="tips">
+        <h2>What to photograph</h2>
+        <ol class="tips__steps">
+          <li><strong>The whole turnstile.</strong> One wide shot from a few steps back.</li>
+          <li><strong>Any label or plate.</strong> Model number, serial number, manufacturer's name.</li>
+          <li><strong>The part itself.</strong> Close up, plus one a little wider so we can see where it sits.</li>
+        </ol>
+        <p>
+          A close-up alone often isn't enough. Many parts look the same across models. The wide shot tells us which model
+          we're looking at.
+        </p>
+        <h3>On the controller or PLC</h3>
+        <p>
+          Look for labels like 8.00, 8.03, STG232, PPLCO, Dev, Opti or Intelligent Controller, and any version number on the
+          PLC. Those markings decide which firmware it needs.
+        </p>
+        <h3>Prefer the phone?</h3>
+        <p class="tips__phone"><a href={site.phoneHref}>{site.phone}</a></p>
+        <p>Or email photos to <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+        <figure class="tips__fun">
+          <img src="/media/confused-removebg-preview.png" alt="A thinking-face emoji" loading="lazy" width="120" />
+          <figcaption>Confused, baffled, stumped? Good. That's what we're here for.</figcaption>
+        </figure>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const MAX = 6;
+  const form = document.querySelector<HTMLFormElement>('[data-id-form]')!;
+  const fileInput = form.querySelector<HTMLInputElement>('[data-files]')!;
+  const thumbs = form.querySelector<HTMLElement>('[data-thumbs]')!;
+  const drop = form.querySelector<HTMLElement>('[data-drop]')!;
+  const err = form.querySelector<HTMLElement>('[data-err]')!;
+  const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+  let photos: { name: string; blob: Blob; url: string }[] = [];
+
+  async function shrink(file: File): Promise<Blob> {
+    try {
+      const bmp = await createImageBitmap(file);
+      const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(bmp.width * scale);
+      c.height = Math.round(bmp.height * scale);
+      c.getContext('2d')!.drawImage(bmp, 0, 0, c.width, c.height);
+      return await new Promise((res) => c.toBlob((b) => res(b ?? file), 'image/jpeg', 0.82));
+    } catch {
+      return file;
+    }
+  }
+  function paint() {
+    thumbs.innerHTML = photos
+      .map((p, i) => `<li><img src="${p.url}" alt="Photo ${i + 1}"><button type="button" data-rm="${i}" aria-label="Remove photo ${i + 1}">Remove</button></li>`)
+      .join('');
+  }
+  async function addFiles(files: FileList | File[]) {
+    for (const f of [...files]) {
+      if (!f.type.startsWith('image/') || photos.length >= MAX) continue;
+      const blob = await shrink(f);
+      photos.push({ name: f.name.replace(/\.[^.]+$/, '') + '.jpg', blob, url: URL.createObjectURL(blob) });
+    }
+    paint();
+  }
+  fileInput.addEventListener('change', () => fileInput.files && addFiles(fileInput.files).then(() => (fileInput.value = '')));
+  thumbs.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-rm]');
+    if (b) {
+      photos.splice(Number(b.dataset.rm), 1);
+      paint();
+    }
+  });
+  ['dragover', 'dragenter'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, () => drop.classList.remove('over')));
+  drop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer?.files) addFiles(e.dataTransfer.files);
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+    const fd = new FormData(form);
+    fd.delete('photos');
+    const what = String(fd.get('what') || '').trim();
+    const email = String(fd.get('email') || '').trim();
+    if (!what || !String(fd.get('name') || '').trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      err.textContent = "Tell us what's going on, plus your name and email so we can answer.";
+      err.hidden = false;
+      return;
+    }
+    photos.forEach((p) => fd.append('photos', p.blob, p.name));
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+      const res = await fetch('/api/identify', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error(String(res.status));
+      form.hidden = true;
+      document.querySelector<HTMLElement>('[data-done]')!.hidden = false;
+    } catch {
+      err.innerHTML =
+        'The photos didn\'t go through from here. Email them to <a href="mailto:xiscontrols@gmail.com">xiscontrols@gmail.com</a> or call 919-412-9200.';
+      err.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Send photos';
+    }
+  });
+</script>
+
+<style>
+  .idp {
+    padding-bottom: 72px;
+  }
+  .idp__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 64px);
+    align-items: start;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    max-width: 18ch;
+  }
+  .idform {
+    margin-top: 24px;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .drop {
+    position: relative;
+    border: 2px dashed var(--black);
+    border-radius: 6px;
+    background: var(--yellow-pale);
+    padding: 26px 16px;
+    text-align: center;
+  }
+  .drop.over {
+    background: var(--yellow);
+  }
+  .drop p {
+    margin: 0;
+  }
+  .drop input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .thumbs {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  :global(.thumbs li) {
+    width: 96px;
+    text-align: center;
+  }
+  :global(.thumbs img) {
+    width: 96px;
+    height: 72px;
+    object-fit: cover;
+    border: 2px solid var(--black);
+    border-radius: 4px;
+  }
+  :global(.thumbs button) {
+    background: none;
+    border: 0;
+    color: var(--blue);
+    text-decoration: underline;
+    font-size: var(--t-xs);
+    cursor: pointer;
+  }
+  .err {
+    background: #fde8e6;
+    border-left: 6px solid var(--red);
+    padding: 10px 14px;
+    font-weight: 600;
+  }
+  .tips {
+    background: var(--bench);
+    border-radius: 4px;
+    padding: 20px 22px;
+  }
+  .tips h2 {
+    font-size: 1.6rem;
+  }
+  .tips h3 {
+    font-size: 1.25rem;
+    margin-top: 20px;
+  }
+  .tips__steps {
+    padding-left: 20px;
+  }
+  .tips__steps li {
+    margin-bottom: 8px;
+  }
+  .tips__phone a {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--black);
+    text-decoration: none;
+  }
+  .tips__fun {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin: 20px 0 0;
+    font-weight: 600;
+  }
+  .tips__fun img {
+    width: 72px;
+  }
+  @media (max-width: 860px) {
+    .idp__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .two {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

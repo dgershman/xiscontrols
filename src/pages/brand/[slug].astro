@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import PartBrowser from '../../components/PartBrowser.astro';
+import HelpBox from '../../components/HelpBox.astro';
+import { getParts, brands } from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const parts = await getParts();
+  return brands
+    .map((b) => ({ params: { slug: b.slug }, props: { brand: b, parts: parts.filter((p) => p.data.brands.includes(b.name)) } }))
+    .filter((x) => x.props.parts.length);
+}
+const { brand, parts } = Astro.props;
+---
+
+<Base title={`${brand.name} turnstile parts`} description={`Replacement parts for ${brand.name} turnstiles, with current prices.`}>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span><a href="/brands/">Brands</a><span aria-hidden="true">/</span>{brand.name}
+    </nav>
+    <h1 class="bh">{brand.name} turnstile parts</h1>
+    {brand.lineage && <p class="lede">{brand.lineage}.</p>}
+    <PartBrowser parts={parts} showBrandFilter={false} />
+    <div style="margin:56px 0 72px;max-width:560px"><HelpBox /></div>
+  </div>
+</Base>
+<style>
+  .bh {
+    font-size: var(--t-3xl);
+    font-weight: 800;
+  }
+</style>

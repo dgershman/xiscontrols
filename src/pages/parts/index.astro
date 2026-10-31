@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import PartBrowser from '../../components/PartBrowser.astro';
+import { getParts, categories, categoryUrl } from '../../lib/catalog';
+const parts = await getParts();
+---
+
+<Base title="All turnstile parts" description="Every turnstile replacement part we carry, with current prices.">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>All parts</nav>
+    <h1>All parts</h1>
+    <ul class="cats">
+      {categories.map((c) => <li><a class="chip chip--light" href={categoryUrl(c.slug)}>{c.short}</a></li>)}
+    </ul>
+    <PartBrowser parts={parts} />
+  </div>
+  <div style="height:64px"></div>
+</Base>
+
+<style>
+  .cats {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>

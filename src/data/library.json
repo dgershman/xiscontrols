@@ -1,0 +1,228 @@
+[
+ {
+  "title": "Industry history",
+  "note": "",
+  "docs": [
+   {
+    "label": "Strange Bedfellows: who bought whom in the turnstile business",
+    "file": "/media/turnstile-bedfellows.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Burle & Philips STG Full Height Turnstile",
+  "note": "",
+  "docs": [
+   {
+    "label": "Original Sales Brochure",
+    "file": "/media/philips-burle-parts/torniquetes-doble-altura.pdf"
+   },
+   {
+    "label": "Assembly Manual",
+    "file": "/media/manuals/burle-stg-assembly-manual.pdf"
+   },
+   {
+    "label": "Installation & Operating Manual",
+    "file": "/media/manuals/burle-stg-installation-operating-manual.pdf"
+   },
+   {
+    "label": "Users Manual",
+    "file": "/media/manuals/burle-stg-users-manual.pdf"
+   },
+   {
+    "label": "Robot & Early Burle Relay Controls",
+    "file": "/media/manuals/robot-relay-schematic.pdf"
+   },
+   {
+    "label": "Relay Control with Time Delay",
+    "file": "/media/manuals/stg-relay-schematic-w-time-delay.jpg"
+   },
+   {
+    "label": "Multi Controller Board Schematic 51-101",
+    "file": "/media/manuals/70-992-philips-multicontroller.pdf"
+   },
+   {
+    "label": "PLC Based Controller Schematic",
+    "file": "/media/manuals/73-106-wiring-diagram-turnstile-plc.pdf"
+   },
+   {
+    "label": "Mechanical Drawings",
+    "file": "/media/manuals/philips-mechanical.pdf"
+   },
+   {
+    "label": "Top Channel Photo",
+    "file": "/media/manuals/top-channel.pdf"
+   },
+   {
+    "label": "Activation Rod & Microswitches Photo",
+    "file": "/media/manuals/activation-rod-switches.pdf"
+   },
+   {
+    "label": "Robot/Burle STG31NM One-Way Non-Electric",
+    "file": "/media/manuals/stg31-one-way-part-numbers.jpg"
+   },
+   {
+    "label": "Horton Automatics 98xx Series Turnstile",
+    "file": "/media/manuals/horton-turnstiles.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Alvarado Turnstiles",
+  "note": "",
+  "docs": [
+   {
+    "label": "MST Series Full Height - Top Channel Photos",
+    "file": "/media/manuals/mst-photos.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Robot, Burle & Philips Upgrade Kits",
+  "note": "",
+  "docs": [
+   {
+    "label": "86-289 Philips STG Upgrade Schematic",
+    "file": "/media/specialty-plc-s/73-102-plc-conversion-wiring-diagram.pdf"
+   },
+   {
+    "label": "86-292 Tomsed STG Upgrade Schematic",
+    "file": "/media/manuals/philips-upgrade-96-292.pdf"
+   },
+   {
+    "label": "PUPKIT Schematic",
+    "file": "/media/manuals/pipkit-xis.pdf"
+   },
+   {
+    "label": "PUPKIT Installation Manual",
+    "file": "/media/manuals/pupkit-instructions-xis.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Legacy Turnstiles - White Papers",
+  "note": "",
+  "docs": [
+   {
+    "label": "Controller Facts",
+    "file": "/media/manuals/the-philips-full-height-turnstile-controller.pdf"
+   },
+   {
+    "label": "PLC Failure Modes",
+    "file": "/media/specialty-plc-s/failure-modes-in-turnstile-plc.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Philips & Tomsed Full Height Turnstiles with Metal Detector",
+  "note": "",
+  "docs": [
+   {
+    "label": "Single Direction Wiring Diagram",
+    "file": "/media/manuals/73-109-wiring-diagram-metal-det.pdf"
+   },
+   {
+    "label": "Dual Direction Wiring Diagram",
+    "file": "/media/manuals/73-108-wiring-diagram-turnstile.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Philips AHSG/SHSG/CHSG & Tomsed TGH-51SG Slide Gate",
+  "note": "",
+  "docs": [
+   {
+    "label": "Schematic",
+    "file": "/media/manuals/philips-slide-gate-schematic.pdf"
+   },
+   {
+    "label": "Magnetic Lock Wiring Diagram",
+    "file": "/media/manuals/hsg-mag-lock.pdf"
+   },
+   {
+    "label": "Mag Lock Power Supply Photo",
+    "file": "/media/manuals/hsg-mag-lock-ps.pdf"
+   },
+   {
+    "label": "Slider Mechanism Drawing",
+    "file": "/media/manuals/slide-gate-mechanism.jpg"
+   }
+  ]
+ },
+ {
+  "title": "Philips & Dearborn Waist High Turnstiles",
+  "note": "",
+  "docs": [
+   {
+    "label": "Installation & Operating Instructions & Mechanism RLT2 Series",
+    "file": "/media/manuals/rlt-manual.pdf"
+   },
+   {
+    "label": "Installation & Operating Instructions & Mechanism 100 & 200 Series",
+    "file": "/media/manuals/series-100-200-manual.pdf"
+   },
+   {
+    "label": "Schematics",
+    "file": "/media/manuals/rlt-schematics.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Tomsed & Boon Edam Control Board",
+  "note": "",
+  "docs": [
+   {
+    "label": "Tomsed Control Board Versions 3 & 4",
+    "file": "/media/manuals/main-control-board-version-4-wiring.pdf"
+   },
+   {
+    "label": "Tomsed & Boon Edam MCB 5.0",
+    "file": "/media/manuals/mcb5-r2.pdf"
+   },
+   {
+    "label": "XIS Controls TCB 6.0/6.1 Replacement",
+    "file": "/media/manuals/tcb6.pdf"
+   },
+   {
+    "label": "Early 1980's Tomsed Discrete Relay Control Schematic",
+    "file": "/media/manuals/early-tomsed-relay-controller.pdf"
+   },
+   {
+    "label": "Early Tomsed FT-15B/D Timer Module",
+    "file": "/media/manuals/ft-15bd-timer.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Philips OP-X/XA & Tomsed TOT-20EL/ELP Optical Turnstile",
+  "note": "",
+  "docs": [
+   {
+    "label": "Original Sales Brochure",
+    "file": "/media/specialty-plc-s/philips-optical-brochure.pdf"
+   },
+   {
+    "label": "Installation Manual",
+    "file": "/media/manuals/philips-installation-documentation-optical.pdf"
+   },
+   {
+    "label": "Tomsed Version Schematic",
+    "file": "/media/manuals/71-100-free-exit-switch.pdf"
+   },
+   {
+    "label": "Optical Controller Photo",
+    "file": "/media/manuals/philips-optical-electronics.pdf"
+   }
+  ]
+ },
+ {
+  "title": "Tomsed TOT-20ES/EP Optical Turnstile",
+  "note": "",
+  "docs": [
+   {
+    "label": "TX9-TMR/2 - Hookup Diagram",
+    "file": "/media/spi/spi-hookup.pdf"
+   }
+  ]
+ }
+]

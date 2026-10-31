@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { getParts, brands, brandUrl } from '../lib/catalog';
+const parts = await getParts();
+const list = brands.map((b) => ({ ...b, count: parts.filter((p) => p.data.brands.includes(b.name)).length })).filter((b) => b.count);
+---
+
+<Base title="Turnstile brands we support">
+  <div class="wrap" style="padding-bottom:72px">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Brands</nav>
+    <h1 style="font-size:var(--t-3xl);font-weight:800">Find parts by brand</h1>
+    <p class="lede">
+      The turnstile business has changed hands a lot. A legacy product made by one company may wear a newer company's sticker,
+      so if the name you see isn't listed, call us. We probably know who really made it.
+    </p>
+    <ul class="blist">
+      {
+        list.map((b) => (
+          <li>
+            <a href={brandUrl(b.name)}>
+              <span class="blist__name">{b.name}</span>
+              <span class="blist__count">{b.count} parts</span>
+              {b.lineage && <span class="blist__line">{b.lineage}</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p style="margin-top:32px"><a href="/media/turnstile-bedfellows.pdf">Strange Bedfellows: a chart of who bought whom</a></p>
+  </div>
+</Base>
+<style>
+  .blist {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .blist a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--black);
+    border-left: 10px solid var(--blue);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .blist a:hover {
+    background: var(--yellow-pale);
+  }
+  .blist__name {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--black);
+  }
+  .blist__count {
+    font-weight: 600;
+  }
+  .blist__line {
+    font-size: var(--t-sm);
+    color: var(--steel);
+  }
+</style>

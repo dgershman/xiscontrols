@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import library from '../../data/library.json';
+import site from '../../data/site.json';
+const kind = (f: string) => (/\.pdf$/i.test(f) ? 'PDF' : /\.(jpe?g|png|gif)$/i.test(f) ? 'Image' : 'Page');
+---
+
+<Base title="The Library: manuals, schematics and drawings" description="Free turnstile manuals, schematics, wiring diagrams and drawings for Robot, Burle, Philips, Tomsed, Boon Edam, Alvarado and more.">
+  <div class="wrap lib">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>Library</nav>
+    <h1>The Library</h1>
+    <p class="lede">
+      Manuals, schematics and drawings we've collected over the years, many donated by customers. If you have a manual,
+      drawing or parts list that isn't here, send us a copy and we'll share it so the next person doesn't have to hunt for it.
+    </p>
+    <p><a href={`mailto:${site.email}?subject=Library%20donation`}>Donate a document</a></p>
+    <div class="lib__grid">
+      {
+        library.map((s) => (
+          <section class="shelf">
+            <h2>{s.title}</h2>
+            <ul>
+              {s.docs.map((d) => (
+                <li>
+                  <a href={d.file} target="_blank" rel="noopener">
+                    <span class="kind">{kind(d.file)}</span>
+                    {d.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<style>
+  .lib {
+    padding-bottom: 72px;
+  }
+  .lib h1 {
+    font-size: var(--t-3xl);
+    font-weight: 800;
+  }
+  .lib__grid {
+    margin-top: 28px;
+    columns: 2 380px;
+    column-gap: 32px;
+  }
+  .shelf {
+    break-inside: avoid;
+    margin-bottom: 28px;
+    border-top: 3px solid var(--black);
+    padding-top: 10px;
+  }
+  .shelf h2 {
+    font-size: 1.45rem;
+  }
+  .shelf ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .shelf li {
+    margin-bottom: 6px;
+  }
+  .shelf a {
+    display: inline-flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .kind {
+    font-size: var(--t-xs);
+    font-weight: 700;
+    color: var(--white);
+    background: var(--blue);
+    border-radius: 3px;
+    padding: 1px 6px;
+    min-width: 44px;
+    text-align: center;
+    flex: none;
+  }
+</style>

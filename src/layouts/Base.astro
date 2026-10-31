@@ -1,0 +1,495 @@
+---
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '@fontsource/barlow/700.css';
+import '@fontsource/barlow/400-italic.css';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/barlow-condensed/800.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+import { categories } from '../lib/catalog';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description, image } = Astro.props;
+const fullTitle = title ? `${title} | XIS Controls` : 'XIS Controls | Turnstile replacement parts';
+const desc =
+  description ??
+  'Replacement parts, controllers and repair help for Robot, Burle, Philips, Tomsed, Boon Edam, Alvarado, Perey, Hayward and other turnstiles. Real prices, no sign-in, and an engineer on the phone.';
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/parts/', label: 'All parts' },
+  { href: '/brands/', label: 'Brands' },
+  { href: '/identify/', label: 'Help me identify' },
+  { href: '/library/', label: 'Library' },
+  { href: '/repairs/', label: 'Repairs' },
+  { href: '/about/', label: 'About' },
+];
+const { cloudflareToken, googleId } = site.analytics;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <link rel="icon" href="/media/brand/favicon.png" />
+    {
+      cloudflareToken && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: cloudflareToken })}
+        />
+      )
+    }
+    {
+      googleId && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleId}`} />
+          <script is:inline define:vars={{ googleId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', googleId);
+          </script>
+        </>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="utility">
+      <div class="wrap utility__in">
+        <p class="utility__help">
+          Free troubleshooting by phone. If you're not sure, call before you order.
+        </p>
+        <p class="utility__contact">
+          <a href={site.phoneHref} class="utility__phone">{site.phone}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+    </div>
+    <header class="masthead">
+      <div class="wrap masthead__in">
+        <a href="/" class="wordmark" aria-label="XIS Controls home">
+          <span class="wordmark__xis">XIS</span>
+          <span class="wordmark__rest">
+            <span class="wordmark__controls">Controls</span>
+            <span class="wordmark__sub">{site.tagline}</span>
+          </span>
+        </a>
+        <form class="search" action="/search/" method="get" role="search" data-search>
+          <label for="q" class="visually-hidden">Search parts</label>
+          <input
+            id="q"
+            name="q"
+            type="search"
+            autocomplete="off"
+            placeholder="Part number, brand, model, or what it does"
+            data-search-input
+          />
+          <button type="submit" class="search__go">Search</button>
+          <div class="search__drop" data-search-drop hidden></div>
+        </form>
+        <a href="/order/" class="cartlink">
+          Order request
+          <span class="cartlink__n" data-cart-count>0</span>
+        </a>
+      </div>
+      <nav class="wrap nav" aria-label="Main">
+        <ul>
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
+                  {n.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="hazard" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot__grid">
+        <div>
+          <p class="foot__mark">XIS Controls</p>
+          <p>
+            Engineers and innovators. Designing and servicing turnstile controls since {site.since}.
+          </p>
+          <p>
+            <a href={site.phoneHref} class="foot__phone">{site.phone}</a><br />
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
+          <p class="foot__small">D-U-N-S {site.duns}</p>
+        </div>
+        <div>
+          <p class="foot__h">Parts</p>
+          <ul>
+            {
+              categories.slice(0, 9).map((c) => (
+                <li>
+                  <a href={`/category/${c.slug.toLowerCase()}/`}>{c.short}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <p class="foot__h">Help</p>
+          <ul>
+            <li><a href="/identify/">Send us a photo</a></li>
+            <li><a href="/library/">Manuals and drawings</a></li>
+            <li><a href="/repairs/">Repairs and re-manufacturing</a></li>
+            <li><a href="/policies/">Ordering, payment and shipping</a></li>
+            <li><a href="/media/turnstile-bedfellows.pdf">Strange Bedfellows: who bought whom</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot__h">How ordering works</p>
+          <p>
+            All prices are current and shown in US dollars. No account needed. Send an order request and we
+            confirm the parts, then invoice you with the exact shipping. We take credit cards and PayPal
+            invoicing.
+          </p>
+        </div>
+      </div>
+      <div class="wrap foot__base">
+        <p>&copy; {new Date().getFullYear()} XIS Controls. Making Obsolescence Obsolete.</p>
+      </div>
+    </footer>
+
+    <script>
+      import { initSearchBox } from '../lib/search-ui';
+      import { initCartBadge } from '../lib/cart';
+      initSearchBox();
+      initCartBadge();
+    </script>
+  </body>
+</html>
+
+<style>
+  .utility {
+    background: var(--black);
+    color: var(--white);
+    font-size: var(--t-sm);
+  }
+  .utility__in {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    flex-wrap: wrap;
+  }
+  .utility p {
+    margin: 0;
+  }
+  .utility a {
+    color: var(--white);
+    text-decoration: none;
+    margin-left: 18px;
+  }
+  .utility a:hover {
+    text-decoration: underline;
+    color: var(--white);
+  }
+  .utility__phone {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--yellow) !important;
+    margin-left: 0 !important;
+  }
+  @media (max-width: 700px) {
+    .utility__help {
+      display: none;
+    }
+    .utility__in {
+      justify-content: center;
+    }
+  }
+
+  .masthead {
+    background: var(--yellow);
+    position: relative;
+  }
+  .masthead__in {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding-top: 16px;
+    padding-bottom: 12px;
+  }
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--black);
+  }
+  .wordmark__xis {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 2.6rem;
+    line-height: 1;
+    background: var(--black);
+    color: var(--yellow);
+    padding: 2px 10px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+  }
+  .wordmark__rest {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+  }
+  .wordmark__controls {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.7rem;
+  }
+  .wordmark__sub {
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .search {
+    position: relative;
+    display: flex;
+  }
+  .search input {
+    border: 2px solid var(--black);
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    padding: 12px 14px;
+    min-height: 48px;
+  }
+  .search__go {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.15rem;
+    border: 2px solid var(--black);
+    background: var(--black);
+    color: var(--yellow);
+    border-radius: 0 6px 6px 0;
+    padding: 0 18px;
+    cursor: pointer;
+  }
+  .cartlink {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--black);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .cartlink__n {
+    background: var(--black);
+    color: var(--yellow);
+    min-width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+  }
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+  }
+  .nav a {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .nav a:hover,
+  .nav a[aria-current] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+  .hazard {
+    height: 10px;
+    background: repeating-linear-gradient(-45deg, var(--black) 0 14px, var(--yellow) 14px 28px);
+  }
+  @media (max-width: 860px) {
+    .masthead__in {
+      grid-template-columns: 1fr auto;
+    }
+    .search {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .wordmark__xis {
+      font-size: 2.1rem;
+    }
+    .wordmark__controls {
+      font-size: 1.4rem;
+    }
+    .nav ul {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      padding-bottom: 12px;
+    }
+  }
+
+  .foot {
+    background: var(--black);
+    color: #d6d9dd;
+    margin-top: 0;
+    font-size: var(--t-sm);
+  }
+  .foot a {
+    color: var(--white);
+  }
+  .foot__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.2fr 1.4fr;
+    gap: 32px;
+    padding-top: 48px;
+    padding-bottom: 32px;
+  }
+  .foot ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .foot li {
+    margin-bottom: 6px;
+  }
+  .foot__mark {
+    font-family: var(--f-cond);
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+  .foot__phone {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--yellow) !important;
+    text-decoration: none;
+  }
+  .foot__h {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--white);
+  }
+  .foot__small {
+    color: #9aa1a9;
+  }
+  .foot__base {
+    border-top: 1px solid #333;
+    padding-top: 16px;
+    padding-bottom: 24px;
+    color: #9aa1a9;
+  }
+  @media (max-width: 860px) {
+    .foot__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .foot__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<style is:global>
+  .search__drop {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+    z-index: 50;
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .search__drop a {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid var(--bench);
+  }
+  .search__drop a:hover,
+  .search__drop a[aria-selected='true'] {
+    background: var(--yellow-pale);
+  }
+  .search__drop img {
+    width: 52px;
+    height: 40px;
+    object-fit: contain;
+    background: var(--bench);
+  }
+  .search__drop .sd-sku {
+    font-family: var(--f-cond);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--black);
+    display: block;
+    line-height: 1.1;
+  }
+  .search__drop .sd-title {
+    font-size: var(--t-sm);
+    color: var(--steel);
+    display: block;
+    line-height: 1.25;
+  }
+  .search__drop .sd-price {
+    font-weight: 600;
+    font-size: var(--t-sm);
+    white-space: nowrap;
+  }
+  .search__drop .sd-all {
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    color: var(--blue);
+    padding: 10px;
+  }
+  .search__drop .sd-none {
+    padding: 14px;
+    margin: 0;
+    font-size: var(--t-sm);
+  }
+</style>
