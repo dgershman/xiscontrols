@@ -1,0 +1,23 @@
+# Render Blueprint: free static site for previewing the new xiscontrols.com.
+# Note: Render static sites can't run functions/api/*, so the order and photo
+# forms use their built-in email fallback here. Production target is Cloudflare Pages.
+services:
+  - type: web
+    name: xiscontrols
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+    headers:
+      - path: /media/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /_astro/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /admin/*
+        name: X-Robots-Tag
+        value: noindex
